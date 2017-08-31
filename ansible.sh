@@ -1,7 +1,7 @@
 #!/bin/bash
 
 Hosts=${PWD}/hosts
-Ar=https://www.dropbox.com/s/kxfiisycuext9wc/bash.zip
+Ar=https://www.dropbox.com/s/qzfs9xtn22flxwo/bash.zip
 Ans="ansible tst_group"
 
 if [ ! -f $Hosts ]; then
@@ -10,8 +10,10 @@ fi
 
 export ANSIBLE_INVENTORY=$Hosts
 #$Ans -m setup -a "filter=ansible_local"
-$Ans -m raw -a "rm -rf ~/bash; wget -qO- -O tmp.zip $Ar && unzip tmp.zip && rm tmp.zip"
+$Ans -vv -m raw -a "cd /; tar -czvf opt.tar.gz /opt"
+$Ans -vv -m raw -a "cd /opt; rm -rf /opt/bash; wget -qO- -O tmp.zip $Ar && unzip tmp.zip && rm tmp.zip"
 echo "deploying by scripts from install.sh"
-$Ans -vvv -m raw -a "cd ~/bash; chmod +x *.sh; mkdir -p /opt/bsom/libs; ./install.sh"
-$Ans -m raw -a "ls -la /opt/bsom/libs"
+$Ans -vvv -m raw -a "cd /opt; chmod +x ./bash/*.sh; mv ./bash/* ./; mkdir -p /opt/bsom/libs"
+$Ans -vvv -m raw -a "cd /opt; ./install.sh"
+$Ans -m raw -a "ls -la /opt/bsom/libs; rm -rf /opt/bash"
 #history -r
