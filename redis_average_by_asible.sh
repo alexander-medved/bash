@@ -2,7 +2,7 @@
 
 file=/tmp/file.txt;
 percload=50
-server='dbmsrv.ong.social'
+server='dbmsrv'
 
 LINES=`wc -l $file | cut -d" " -f 1`;
 
@@ -27,7 +27,7 @@ then
 		echo "$ave% is hevy loading lets flashall sessions"
 		docker exec redis redis-cli -h $server -p 6379 flushall;
 		echo "1" > $file;
-		
+
 	else
 		echo "Redis is not so heavy loaded than $percload%, only $ave"
 	fi
