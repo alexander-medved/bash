@@ -1,0 +1,48 @@
+#!/bin/sh 
+#
+# chkconfig: 345 60 90
+# description: Synchroniser between disks HDD and RAM
+# processname: ramdisk
+# /etc/init.d/ramdisk
+#
+### BEGIN INIT INFO
+# Provides:          ramdisk
+# Required-Start:    ramdisk
+# Required-Stop:     ramdisk
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: Synchroniser by rsync.
+# Description: Synchroniser between disks HDD and RAM
+### END INIT INFO
+. /etc/rc.d/init.d/functions
+
+start() {
+        echo -n "Starting <servicename>: "
+}
+
+stop() {
+        echo -n "Shutting down <servicename>: "
+}
+
+case "$1" in
+  start)
+    echo "Copying files to ramdisk"
+    rsync -av /mnt/san300logs/ramdisk-backup/ /mnt/ramdisk/
+    echo [`date +"%Y-%m-%d %H:%M"`] Ramdisk Synched from HD, cause: $1 >> /var/log/ramdisk_sync.log
+    ;;
+  sync)
+    echo "Synching files from ramdisk to Harddisk"
+    echo [`date +"%Y-%m-%d %H:%M"`] Ramdisk Synched to HD, cause: $1 >> /var/log/ramdisk_sync.log
+    rsync -av --delete --recursive --force /mnt/ramdisk/ /mnt/san300logs/ramdisk-backup/
+    ;;
+  stop)
+    echo "Synching logfiles from ramdisk to Harddisk"
+    echo [`date +"%Y-%m-%d %H:%M"`] Ramdisk Synched to HD, cause: $1 >> /var/log/ramdisk_sync.log
+    rsync -av --delete --recursive --force /mnt/ramdisk/ /mnt/san300logs/ramdisk-backup/
+    ;;
+  *)
+    echo "Usage: /etc/init.d/ramdisk {start|stop|sync}"
+    exit 1
+    ;;
+esac
+exit $?
