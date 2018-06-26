@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 TEMP_ON_HDD=/mnt/san300logs/ramdisk-backup
 MP_RAM_DISK=/mnt/ramdisk
 SERVICE=/etc/rc.d/init.d/ramdisk
@@ -24,6 +24,8 @@ crontask(){
                 crontab -l > mycron
                 #echo new cron into cron file
                 echo "* * * * * bash $SERVICE sync >> /dev/null 2>&1" >> mycron
+		#as a temporary solution, better to use logrotate for logs rotation
+		echo "@daily echo 0 > /var/log/ramdisk_sync.log >> /dev/null 2>&1" >> mycron
                 #install new cron file
                 crontab mycron
                 rm mycron
