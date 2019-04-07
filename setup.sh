@@ -1,10 +1,10 @@
 #!/bin/bash
 -e
 
-PaFile=$PASS
+PaFile=$CREDS
 PubKey=~/.ssh/id_rsa.pub
 
-if [ ! -f $PaFile ]; then
+if [ ! -z $PaFile ]; then
     echo "the $PaFile not found!"
 fi
 if [ ! -f $PubKey ]; then
