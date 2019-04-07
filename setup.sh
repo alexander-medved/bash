@@ -1,6 +1,7 @@
 #!/bin/bash
+-e
 
-PaFile=./pass_file.txt
+PaFile=$PASS
 PubKey=~/.ssh/id_rsa.pub
 
 if [ ! -f $PaFile ]; then
